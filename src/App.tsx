@@ -22,8 +22,7 @@ const App: FC<IProps> = () => {
   }
   return (
     <div>
-      {count}-{message}
-      <button onClick={handleMessage}>修改message</button>
+      {count}-{message}1<button onClick={handleMessage}>修改message</button>
       <Suspense fallback="">{useRoutes(routes)}</Suspense>
     </div>
   )
