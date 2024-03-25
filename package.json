@@ -26,6 +26,7 @@
     "build": "craco build",
     "test": "craco test",
     "eject": "react-scripts eject",
+    "lint:lint-staged": "lint-staged",
     "lint:fix": "eslint --ext .vue,.js,jsx,.ts,.tsx ./ --max-warnings 0 --fix",
     "prettier": "prettier --write .",
     "prepare": "husky install"
@@ -49,6 +50,8 @@
     ]
   },
   "devDependencies": {
+    "@commitlint/cli": "^19.2.1",
+    "@commitlint/config-conventional": "^19.1.0",
     "@craco/craco": "^7.1.0",
     "@typescript-eslint/eslint-plugin": "latest",
     "@typescript-eslint/parser": "latest",
@@ -67,5 +70,11 @@
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
+  },
+  "lint-staged": {
+    "*.{js,jsx,vue,ts,tsx}": [
+      "prettier --write",
+      "npm run lint:fix"
+    ]
   }
 }
