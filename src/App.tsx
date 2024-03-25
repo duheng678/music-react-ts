@@ -16,13 +16,14 @@ const App: FC<IProps> = () => {
     }),
     shallowEqualApp
   )
+
   const dispatch = useAppDispatch()
   function handleMessage() {
     dispatch(changeMessage('hello dh'))
   }
   return (
     <div>
-      {count}-{message}1<button onClick={handleMessage}>修改message</button>
+      {count}-{message}12<button onClick={handleMessage}>修改message</button>
       <Suspense fallback="">{useRoutes(routes)}</Suspense>
     </div>
   )
