@@ -1,6 +1,6 @@
 import React, { memo } from 'react'
 import type { FC, ReactNode } from 'react'
-import ClassTemplate from './01-类组件'
+import ClassTemplate from './01-class-template'
 interface IProps {
   children?: ReactNode
 }
