@@ -1,0 +1,7 @@
+/node_modules
+/dist
+/build
+/src/assets/
+/package-lock.json
+.DS_Store
+craco.config.js

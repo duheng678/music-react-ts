@@ -8,6 +8,8 @@ const store = configureStore({
     counter: counterReducer
   }
 })
+// const state = store.getState()
+// type StateType = typeof state
 
 type GetStateFnType = typeof store.getState
 export type IRootState = ReturnType<GetStateFnType>

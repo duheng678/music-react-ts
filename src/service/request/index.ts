@@ -17,8 +17,6 @@ class DHRequest {
     this.instance.interceptors.request.use(
       (config) => {
         // loading/token
-        console.log('all', config)
-
         return config
       },
       (err) => {
