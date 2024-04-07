@@ -40,7 +40,7 @@ export const footerImages = [
 export const discoverMenu = [
   {
     title: '推荐',
-    link: '/discover/recommend'
+    link: '/discover'
   },
   {
     title: '排行榜',

@@ -1,11 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit'
 import counterReducer from './modules/counter'
+import RecommendReducer from '@/views/discover/c-views/recommend/store'
 import { shallowEqual } from 'react-redux'
 
 import { useSelector, TypedUseSelectorHook, useDispatch } from 'react-redux'
 const store = configureStore({
   reducer: {
-    counter: counterReducer
+    counter: counterReducer,
+    recommend: RecommendReducer //发现音乐->推荐
   }
 })
 // const state = store.getState()

@@ -1,6 +1,8 @@
 import React, { Suspense, memo } from 'react'
 import type { FC, ReactNode } from 'react'
 import { Outlet } from 'react-router-dom'
+import { DiscoverWrapper } from './style'
+import NavBar from './c-cpns/nav-bar'
 
 interface IProps {
   children?: ReactNode
@@ -8,11 +10,14 @@ interface IProps {
 
 const Discover: FC<IProps> = () => {
   return (
-    <div>
+    <DiscoverWrapper>
+      <div className="top">
+        <NavBar />
+      </div>
       <Suspense fallback="">
         <Outlet />
       </Suspense>
-    </div>
+    </DiscoverWrapper>
   )
 }
 
