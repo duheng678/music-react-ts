@@ -4,3 +4,4 @@ declare namespace NodeJS {
     readonly REACT_APP_BASE_URL: string
   }
 }
+declare module 'react-transition-group'
