@@ -58,7 +58,7 @@ const TopBanner: FC<IProps> = () => {
   }, [banners])
 
   let imageUrl = ''
-  if (banners.length) {
+  if (banners?.length) {
     imageUrl = banners[currentIndex].imageUrl + '?param=730y285'
   }
   // 获取背景图片
