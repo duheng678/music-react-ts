@@ -9,13 +9,13 @@ import classNames from 'classnames'
 interface IProps {
   children?: ReactNode
 }
-console.log('banner')
 
 const TopBanner: FC<IProps> = () => {
   // const bannerRef = useRef<ElementRef<typeof Carousel>>(null)
   const [currentIndex, setCurrentIndex] = useState(0)
   const [bgImage, setBgImage] = useState<string>()
   const indexRef = useRef(currentIndex)
+  const timerRef = useRef<ReturnType<typeof setInterval>>()
 
   const { banners } = useAppSelector(
     (state) => ({
@@ -24,49 +24,42 @@ const TopBanner: FC<IProps> = () => {
     shallowEqualApp
   )
   // 事件处理函数
-
   function handleChangeClick(flag: boolean) {
     let newIndex = flag ? currentIndex - 1 : currentIndex + 1
     if (newIndex >= banners.length) newIndex = 0
     if (newIndex < 0) newIndex = banners.length - 1
     // bannerRef.current?.next()
     setCurrentIndex(newIndex)
-    console.log('1', currentIndex)
     indexRef.current = newIndex
   }
 
+  // 轮播图切换图片后 设置背景
   function handleAfterChange() {
-    console.log('2', currentIndex, indexRef.current)
-
     setBgImage(banners[indexRef.current]?.imageUrl + '?imageView&blur=40x20')
-
-    console.log('??')
-    // setBgImage(banners[currentIndex].imageUrl + '?imageView&blur=40x20')
-    // setDotIndex(indexRef.current)
   }
-  console.log('3', currentIndex, indexRef.current)
-
+  //点击红点跳转对应的图片
   function handleGoDot(index: number) {
     setCurrentIndex(index)
     indexRef.current = index
-    // bannerRef.current?.goTo(index, true)
     setBgImage(banners[indexRef.current]?.imageUrl + '?imageView&blur=40x20')
   }
 
+  // 获取背景图片
   useEffect(() => {
     if (banners?.length) setBgImage(banners[0]?.imageUrl + '?imageView&blur=40x20')
   }, [banners])
 
+  //使用图片
   let imageUrl = ''
   if (banners?.length) {
     imageUrl = banners[currentIndex].imageUrl + '?param=730y285'
   }
-  // 获取背景图片
-  // let bgImageUrl = ''
-  // if (currentIndex >= 0 && banners.length > 0) {
-  //   bgImageUrl = banners[currentIndex]?.imageUrl + '?imageView&blur=40x20'
-  // }
+  // 定时器
+  if (timerRef.current) clearInterval(timerRef.current)
 
+  timerRef.current = setInterval(() => {
+    handleChangeClick(true)
+  }, 3000)
   return (
     <BannerWrapper bgimage={bgImage}>
       <div className="banner wrap-v2">
