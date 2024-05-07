@@ -5,8 +5,8 @@ interface IProps {
   children?: ReactNode
 }
 
-const Songs: FC<IProps> = () => {
-  return <div>Songs</div>
+const SectionHeaderV2: FC<IProps> = () => {
+  return <div>SectionHeaderV2</div>
 }
 
-export default memo(Songs)
+export default memo(SectionHeaderV2)

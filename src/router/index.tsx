@@ -10,8 +10,8 @@ const Demo = lazy(() => import('@/views/demo'))
 
 // 发现音乐模块
 const Recommend = lazy(() => import('@/views/discover/c-views/recommend'))
-const Ranking = lazy(() => import('@/views/discover/c-views/ranking'))
-const Songs = lazy(() => import('@/views/discover/c-views/songs'))
+const TopList = lazy(() => import('@/views/discover/c-views/top-list'))
+const PlayList = lazy(() => import('@/views/discover/c-views/playlist'))
 const DjRadio = lazy(() => import('@/views/discover/c-views/djradio'))
 const Artist = lazy(() => import('@/views/discover/c-views/artist'))
 const Album = lazy(() => import('@/views/discover/c-views/album'))
@@ -25,8 +25,8 @@ const routes: RouteObject[] = [
     children: [
       // { path: '/discover/', element: <Navigate to="/discover/" /> },
       { path: '/discover', element: <Recommend /> },
-      { path: '/discover/ranking', element: <Ranking /> },
-      { path: '/discover/songs', element: <Songs /> },
+      { path: '/discover/toplist', element: <TopList /> },
+      { path: '/discover/playlist', element: <PlayList /> },
       { path: '/discover/djradio', element: <DjRadio /> },
       { path: '/discover/artist', element: <Artist /> },
       { path: '/discover/album', element: <Album /> }

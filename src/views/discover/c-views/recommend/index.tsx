@@ -4,6 +4,8 @@ import { useAppDispatch } from '@/store'
 import { fetchBannerDataAction } from './store'
 import TopBanner from './c-cpns/top-banner'
 import { RecommendWrapper, RecommendSection, RecommendLeft, RecommendRight } from './style'
+import UserLogin from './c-cpns/user-login'
+import HotRecommend from './c-cpns/hot-recommend'
 interface IProps {
   children?: ReactNode
 }
@@ -17,9 +19,13 @@ const Recommend: FC<IProps> = () => {
   return (
     <RecommendWrapper>
       <TopBanner />
-      <RecommendSection>
-        <RecommendLeft></RecommendLeft>
-        <RecommendRight></RecommendRight>
+      <RecommendSection className="wrap-v2">
+        <RecommendLeft>
+          <HotRecommend />
+        </RecommendLeft>
+        <RecommendRight>
+          <UserLogin />
+        </RecommendRight>
       </RecommendSection>
     </RecommendWrapper>
   )
