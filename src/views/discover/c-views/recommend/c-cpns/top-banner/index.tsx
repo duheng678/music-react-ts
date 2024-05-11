@@ -58,7 +58,7 @@ const TopBanner: FC<IProps> = () => {
   if (timerRef.current) clearInterval(timerRef.current)
 
   timerRef.current = setInterval(() => {
-    handleChangeClick(true)
+    handleChangeClick(false)
   }, 3000)
   return (
     <BannerWrapper bgimage={bgImage}>
