@@ -16,9 +16,10 @@ const HotRecommend: FC<IProps> = () => {
     title: '热门推荐',
     morePath: '/discover/playlist'
   }
+  const goOtherPage = () => {}
   return (
     <RecommendWrapper>
-      <SectionHeaderV1 {...headerInfo} />
+      <SectionHeaderV1 goOtherPage={goOtherPage} {...headerInfo} />
     </RecommendWrapper>
   )
 }
