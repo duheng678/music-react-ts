@@ -12,6 +12,8 @@ interface IProps {
 
 const TopBanner: FC<IProps> = () => {
   // const bannerRef = useRef<ElementRef<typeof Carousel>>(null)
+
+  const nodeRef = useRef(null) //
   const [currentIndex, setCurrentIndex] = useState(0)
   const [bgImage, setBgImage] = useState<string>()
   const indexRef = useRef(currentIndex)
@@ -80,6 +82,7 @@ const TopBanner: FC<IProps> = () => {
           <div className="banner-list">
             <SwitchTransition mode="out-in">
               <CSSTransition
+                nodeRef={nodeRef}
                 classNames="fade"
                 timeout={100}
                 key={currentIndex}
@@ -92,13 +95,14 @@ const TopBanner: FC<IProps> = () => {
             </SwitchTransition>
           </div>
           <ul className="dots">
-            {banners.map((item, index) => {
-              return (
-                <li key={item.imageUrl} onClick={() => handleGoDot(index)}>
-                  <span className={classNames('item', { active: index === currentIndex })}></span>
-                </li>
-              )
-            })}
+            {banners?.length &&
+              banners.map((item, index) => {
+                return (
+                  <li key={item.imageUrl} onClick={() => handleGoDot(index)}>
+                    <span className={classNames('item', { active: index === currentIndex })}></span>
+                  </li>
+                )
+              })}
           </ul>
         </LeftWrapper>
         <RightWrapper>

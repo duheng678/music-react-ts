@@ -8,24 +8,26 @@ interface IProps {
   keywords: string[]
   title: string
   morePath: string
-  goOtherPage: () => void
+  goOtherPage: (param?: string) => void
 }
 
 const SectionHeaderV1: FC<IProps> = (props: IProps) => {
   const { keywords, title, morePath, goOtherPage } = props
 
-  const goPage = () => {
-    goOtherPage()
+  const goPage = (item?: string) => {
+    goOtherPage(item)
   }
   return (
     <HeaderV1Wrapper>
       <div className="left">
-        <div className="title">{title}</div>
+        <div className="title" onClick={() => goPage()}>
+          {title}
+        </div>
         <div className="keyword">
           {keywords.map((item) => {
             return (
               <div className="item" key={item}>
-                <a onClick={() => goPage()} className="link">
+                <a onClick={() => goPage(item)} className="link">
                   {item}
                 </a>
                 <span className="divider"> | </span>
