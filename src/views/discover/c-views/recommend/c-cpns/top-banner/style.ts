@@ -37,7 +37,7 @@ export const LeftWrapper = styled.div`
 
   .fade-exit-active {
     opacity: 0.2;
-    transition: opacity 0.1s ease-out;
+    transition: opacity 0.3s ease-out;
   }
   .dots {
     position: absolute;

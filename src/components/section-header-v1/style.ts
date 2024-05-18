@@ -51,6 +51,11 @@ export const HeaderV1Wrapper = styled.div`
   .right {
     display: flex;
     align-items: center;
+    .more {
+      &:hover {
+        text-decoration: underline;
+      }
+    }
     .icon {
       display: inline-block;
       width: 12px;

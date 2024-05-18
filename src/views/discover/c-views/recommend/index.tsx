@@ -6,6 +6,7 @@ import TopBanner from './c-cpns/top-banner'
 import { RecommendWrapper, RecommendSection, RecommendLeft, RecommendRight } from './style'
 import UserLogin from './c-cpns/user-login'
 import HotRecommend from './c-cpns/hot-recommend'
+import NewAlbum from './c-cpns/new-album'
 interface IProps {
   children?: ReactNode
 }
@@ -22,6 +23,7 @@ const Recommend: FC<IProps> = () => {
       <RecommendSection className="wrap-v2">
         <RecommendLeft>
           <HotRecommend />
+          <NewAlbum />
         </RecommendLeft>
         <RecommendRight>
           <UserLogin />

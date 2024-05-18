@@ -13,7 +13,7 @@ interface IProps {
 const TopBanner: FC<IProps> = () => {
   // const bannerRef = useRef<ElementRef<typeof Carousel>>(null)
 
-  const nodeRef = useRef(null) //
+  // const nodeRef = useRef(null) //
   const [currentIndex, setCurrentIndex] = useState(0)
   const [bgImage, setBgImage] = useState<string>()
   const indexRef = useRef(currentIndex)
@@ -82,9 +82,8 @@ const TopBanner: FC<IProps> = () => {
           <div className="banner-list">
             <SwitchTransition mode="out-in">
               <CSSTransition
-                nodeRef={nodeRef}
                 classNames="fade"
-                timeout={100}
+                timeout={300}
                 key={currentIndex}
                 onExited={() => handleAfterChange()}
               >

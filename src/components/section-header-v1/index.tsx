@@ -5,26 +5,26 @@ import { Link } from 'react-router-dom'
 
 interface IProps {
   children?: ReactNode
-  keywords: string[]
+  keywords?: string[]
   title: string
   morePath: string
-  goOtherPage: (param?: string) => void
+  goOtherPage?: (param?: string) => void
 }
 
 const SectionHeaderV1: FC<IProps> = (props: IProps) => {
   const { keywords, title, morePath, goOtherPage } = props
 
   const goPage = (item?: string) => {
-    goOtherPage(item)
+    if (goOtherPage) goOtherPage(item)
   }
   return (
-    <HeaderV1Wrapper>
+    <HeaderV1Wrapper className="sprite_02">
       <div className="left">
         <div className="title" onClick={() => goPage()}>
           {title}
         </div>
         <div className="keyword">
-          {keywords.map((item) => {
+          {keywords?.map((item) => {
             return (
               <div className="item" key={item}>
                 <a onClick={() => goPage(item)} className="link">
@@ -37,7 +37,9 @@ const SectionHeaderV1: FC<IProps> = (props: IProps) => {
         </div>
       </div>
       <div className="right">
-        <Link to={morePath}>更多</Link>
+        <Link className="more" to={morePath}>
+          更多
+        </Link>
         <i className="icon sprite_02"></i>
       </div>
     </HeaderV1Wrapper>
