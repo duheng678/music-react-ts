@@ -18,3 +18,22 @@ export function getNewAlbum(offset = 0, limit = 10) {
     }
   })
 }
+//榜单
+export function getPlayListDetail(id: number) {
+  return request.get({
+    url: '/playlist/detail',
+    params: {
+      id
+    }
+  })
+}
+//歌手
+export function getArtistList(cat: number, limit: number) {
+  return request.get({
+    url: '/artist/list',
+    params: {
+      cat,
+      limit
+    }
+  })
+}

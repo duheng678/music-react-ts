@@ -18,8 +18,12 @@ const AlbumItemV1: FC<IProps> = (props) => {
         <a className="cover sprite_cover">{itemData.name}</a>
       </div>
       <div className="album-info">
-        <div className="name">{itemData.name}</div>
-        <div className="artist">{itemData.artist.name}</div>
+        <div className="name" title={itemData.name}>
+          {itemData.name}
+        </div>
+        <div className="artist" title={itemData.artist.name}>
+          {itemData.artist.name}
+        </div>
       </div>
     </ItemV1Wrapper>
   )

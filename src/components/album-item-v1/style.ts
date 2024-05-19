@@ -27,6 +27,10 @@ export const ItemV1Wrapper = styled.div`
   .album-info {
     font-size: 12px;
     width: 100px;
+    > div:hover {
+      text-decoration: underline;
+      cursor: pointer;
+    }
     .name {
       color: #000;
       white-space: nowrap;
@@ -36,6 +40,9 @@ export const ItemV1Wrapper = styled.div`
 
     .artist {
       color: #666;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
     }
   }
 `
