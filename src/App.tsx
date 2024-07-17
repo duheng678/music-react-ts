@@ -4,6 +4,7 @@ import routes from '@/router'
 import { useRoutes } from 'react-router-dom'
 import AppHeader from '@/components/app-header'
 import AppFooter from '@/components/app-footer'
+import PlayerBar from './views/player/player-bar'
 interface IProps {
   children?: ReactNode
 }
@@ -14,6 +15,7 @@ const App: FC<IProps> = () => {
       <AppHeader />
       <Suspense fallback="">{useRoutes(routes)}</Suspense>
       <AppFooter />
+      <PlayerBar />
     </div>
   )
 }

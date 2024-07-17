@@ -16,7 +16,7 @@ const SectionHeaderV2: FC<IProps> = (props) => {
   return (
     <HeaderV2Wrapper>
       <h3 className="title">{title}</h3>
-      <Link to={morePath ?? ''}>{more} &gt;</Link>
+      {morePath && <Link to={morePath ?? ''}>{more} &gt;</Link>}
     </HeaderV2Wrapper>
   )
 }

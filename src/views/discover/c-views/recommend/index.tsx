@@ -9,6 +9,7 @@ import HotRecommend from './c-cpns/hot-recommend'
 import NewAlbum from './c-cpns/new-album'
 import TopRanking from './c-cpns/top-ranking'
 import SettleSinger from './c-cpns/settle-singer'
+import HotAnchor from './c-cpns/hot-anchor'
 interface IProps {
   children?: ReactNode
 }
@@ -33,6 +34,7 @@ const Recommend: FC<IProps> = () => {
         <RecommendRight>
           <UserLogin />
           <SettleSinger />
+          <HotAnchor />
         </RecommendRight>
       </RecommendSection>
     </RecommendWrapper>
