@@ -34,7 +34,7 @@ export const PlayerBarWrapper = styled.div`
 `
 
 interface IBarControl {
-  isPlaying: boolean
+  isplaying: string
 }
 export const BarControl = styled.div<IBarControl>`
   display: flex;
@@ -55,7 +55,11 @@ export const BarControl = styled.div<IBarControl>`
     width: 36px;
     height: 36px;
     margin: 0 8px;
-    background-position: 0 ${(props) => (props.isPlaying ? '-165px' : '-204px')};
+    background-position: 0 ${(props) => (props.isplaying === 'true' ? '-165px' : '-204px')};
+    cursor: pointer;
+    &:hover {
+      background-position: -40px ${(props) => (props.isplaying === 'true' ? '-165px' : '-204px')};
+    }
   }
 
   .next {
@@ -115,8 +119,13 @@ export const BarPlayInfo = styled.div`
           width: 22px;
           height: 24px;
           border: none;
-          margin-top: -7px;
+          margin-top: -5px;
           background: url(${require('@/assets/img/sprite_icon.png')}) 0 -250px;
+          cursor: auto;
+          &::before,
+          &::after {
+            display: none;
+          }
         }
       }
 
@@ -133,7 +142,7 @@ export const BarPlayInfo = styled.div`
 `
 
 interface IBarOperator {
-  playMode: number
+  playmode: number
 }
 export const BarOperator = styled.div<IBarOperator>`
   display: flex;
@@ -144,6 +153,7 @@ export const BarOperator = styled.div<IBarOperator>`
   .btn {
     width: 25px;
     height: 25px;
+    cursor: pointer;
   }
 
   .left {
@@ -176,7 +186,7 @@ export const BarOperator = styled.div<IBarOperator>`
 
     .loop {
       background-position: ${(props) => {
-        switch (props.playMode) {
+        switch (props.playmode) {
           case 1:
             return '-66px -248px'
           case 2:

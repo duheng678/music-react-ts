@@ -43,8 +43,6 @@ export const fetchRankingDataAction = createAsyncThunk('ranking', (arg, { dispat
 //歌手数据
 export const fetchSettleSinger = createAsyncThunk('settlesinger', async (_, { dispatch }) => {
   const res = await getArtistList(5001, 5)
-  // dispatch()
-  console.log(res)
 
   dispatch(changeSettleSingerAction(res.artists))
 })
