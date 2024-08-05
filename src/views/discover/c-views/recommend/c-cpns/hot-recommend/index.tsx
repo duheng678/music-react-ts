@@ -15,7 +15,7 @@ const HotRecommend: FC<IProps> = () => {
 
   const { hotRecommend } = useAppSelector(
     (state) => ({
-      hotRecommend: state.recommend.hotRecommend
+      hotRecommend: state.recommend.hotRecommend || []
     }),
     shallowEqualApp
   )
@@ -33,9 +33,11 @@ const HotRecommend: FC<IProps> = () => {
     <RecommendWrapper>
       <SectionHeaderV1 goOtherPage={goOtherPage} {...headerInfo} />
       <div className="recommend-list">
-        {hotRecommend.slice(0, 8).map((item) => {
-          return <SectionItemV1 info={item} key={item.id} />
-        })}
+        {hotRecommend &&
+          hotRecommend.length &&
+          hotRecommend.slice(0, 8).map((item) => {
+            return <SectionItemV1 info={item} key={item.id} />
+          })}
       </div>
     </RecommendWrapper>
   )

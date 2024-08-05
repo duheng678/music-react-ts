@@ -34,7 +34,7 @@ export const PlayerBarWrapper = styled.div`
 `
 
 interface IBarControl {
-  isPlaying: boolean
+  'is-playing': string
 }
 export const BarControl = styled.div<IBarControl>`
   display: flex;
@@ -55,10 +55,11 @@ export const BarControl = styled.div<IBarControl>`
     width: 36px;
     height: 36px;
     margin: 0 8px;
-    background-position: 0 ${(props) => (props.isPlaying ? '-165px' : '-204px')};
+    background-position: 0 ${(props) => (props['is-playing'] === 'play' ? '-165px' : '-204px')};
     cursor: pointer;
     &:hover {
-      background-position: -40px ${(props) => (props.isPlaying ? '-165px' : '-204px')};
+      background-position: -40px
+        ${(props) => (props['is-playing'] === 'play' ? '-165px' : '-204px')};
     }
   }
 

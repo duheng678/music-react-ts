@@ -14,7 +14,7 @@ const NewAlbum: FC<IProps> = () => {
   const albumRef = useRef<ElementRef<typeof Carousel>>(null)
   const { newAlbum } = useAppSelector(
     (state) => ({
-      newAlbum: state.recommend.newAlbum
+      newAlbum: state.recommend.newAlbum || []
     }),
     shallowEqualApp
   )

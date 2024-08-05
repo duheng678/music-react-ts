@@ -1,6 +1,32 @@
-import { createSlice } from '@reduxjs/toolkit'
-
-const initialState = {
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+import { getSongDetail, getSongLyric } from '../service'
+import { IRootState } from '@/store'
+import { ILyric, parseLyric } from '@/utils/parse-lyric'
+export const fetchCurrentSongAction = createAsyncThunk<void, number, { state: IRootState }>(
+  'currentSong',
+  (id: number, { dispatch }) => {
+    // dispatch(changeCurrentSongAction(initialState.currentSong))
+    getSongDetail(id).then((res) => {
+      if (!res?.songs?.length) return
+      dispatch(changeCurrentSongAction(res?.songs?.[0]))
+    })
+    //获取歌词
+    getSongLyric(id).then((res) => {
+      // 1获取歌词
+      const lyricString = res?.lrc?.lyric
+      // 2 解析歌词
+      const lyrics = parseLyric(lyricString)
+      console.log(lyrics)
+      dispatch(changeLyricAction(lyrics))
+    })
+  }
+)
+interface IPlayerState {
+  currentSong: any
+  lyrics: ILyric[]
+  lyricIndex: number
+}
+const initialState: IPlayerState = {
   currentSong: {
     name: '温柔',
     id: 386538,
@@ -25,7 +51,7 @@ const initialState = {
     al: {
       id: 38285,
       name: '我们是五月天',
-      picUrl: 'https://p2.music.126.net/XlMYABTsvXGxOn0h9F61VQ==/109951168750902183.jpg',
+      picUrl: 'https://p1.music.126.net/XlMYABTsvXGxOn0h9F61VQ==/109951168750902183.jpg',
       tns: [],
       pic_str: '109951168750902183',
       pic: 109951168750902180
@@ -86,14 +112,27 @@ const initialState = {
     mst: 9,
     cp: 684010,
     publishTime: 1049126400000
-  }
+  },
+  lyrics: [],
+  lyricIndex: -1
 }
 const playerSlice = createSlice({
   name: 'player',
   initialState,
-  reducers: {}
+  reducers: {
+    changeCurrentSongAction(state, { payload }) {
+      state.currentSong = payload
+    },
+    changeLyricAction(state, { payload }) {
+      state.lyrics = payload
+    },
+    changeLyricIndexAction(state, { payload }) {
+      state.lyricIndex = payload
+    }
+  }
 })
 
 export default playerSlice.reducer
-
+export const { changeCurrentSongAction, changeLyricAction, changeLyricIndexAction } =
+  playerSlice.actions
 // export const {} = playerSlice.actions

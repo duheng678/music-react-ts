@@ -4,31 +4,39 @@ import { BarControl, BarOperator, BarPlayInfo, PlayerBarWrapper } from './style'
 import { NavLink } from 'react-router-dom'
 import { Slider } from 'antd'
 // import { useSelector } from 'react-redux'
-import { shallowEqualApp, useAppSelector } from '@/store'
+import { shallowEqualApp, useAppDispatch, useAppSelector } from '@/store'
 import { getSongUrl } from '../service'
 import { formatTime } from '@/utils/handle-player'
+import { changeLyricIndexAction } from '../store/player'
 interface IProps {
   children?: ReactNode
 }
 
 const PlayerBar: FC<IProps> = () => {
   const audioRef = useRef<HTMLAudioElement>(null)
+  const dispatch = useAppDispatch()
 
-  const { currentSong } = useAppSelector(
+  const { currentSong, lyrics, lyricIndex } = useAppSelector(
     (state) => ({
-      currentSong: state.player.currentSong
+      currentSong: state.player.currentSong,
+      lyrics: state.player.lyrics,
+      lyricIndex: state.player.lyricIndex
     }),
     shallowEqualApp
   )
-  console.log(currentSong)
 
   //组件内副作用操作
   useEffect(() => {
     if (!audioRef.current) return
 
-    getSongUrl(currentSong.id).then((res) => {
+    getSongUrl(currentSong?.id).then((res) => {
       console.log(res)
-      audioRef.current!.src = res.data[0].url
+      if (res.data && res.data.length > 0) {
+        const { time, url } = res.data[0]
+
+        setDuration(time)
+        audioRef.current!.src = url
+      }
     })
     audioRef.current?.play().then(
       (res) => {
@@ -41,34 +49,68 @@ const PlayerBar: FC<IProps> = () => {
     setDuration(currentSong?.dt)
   }, [currentSong])
 
-  const [isPlaying, setIsPlaying] = useState(false)
-  const [progress, setProgress] = useState(0)
-  const [duration, setDuration] = useState(0)
+  const [isPlaying, setIsPlaying] = useState('pause') //暂停开始
+  const [progress, setProgress] = useState(0) //进度条
+  const [duration, setDuration] = useState(0) //总时长
+  const [currentTime, setCurrentTime] = useState(0) //歌曲当前播放s时间
+  const [isSliding, setSliding] = useState(false)
 
-  const handleChangeBtnClick = (flag?: boolean) => {
-    console.log(flag, setProgress, audioRef.current?.currentTime)
-  }
   //音乐播放进度处理
   const handleTimeUpdate = () => {
-    console.log('???', setProgress, audioRef.current?.currentTime)
     // setDuration(audioRef.current?.currentTime)
-    const currentTime: number = audioRef.current?.currentTime || 0
-    const progress = (((currentTime as number) * 1000) / duration) * 100
-    setProgress(progress)
+    // 1 获取当前播放时间
+    const currentTime: number = audioRef.current!.currentTime * 1000 || 0
+
+    //2 计算当前歌曲进度
+
+    if (!isSliding) {
+      const progress = ((currentTime as number) / duration) * 100
+      setCurrentTime(currentTime)
+      setProgress(progress)
+    }
+    //3 根据当前事件匹配对应的歌词
+
+    // const index = lyrics.findIndex((item) => item.time - currentTime > 0)
+    let index = lyrics.length - 1
+    for (let i = 0; i < lyrics.length; i++) {
+      const lyric = lyrics[i]
+      if (lyric.time > currentTime) {
+        index = i - 1
+        break
+      }
+    }
+    if (lyricIndex === index || index === -1) return
+    dispatch(changeLyricIndexAction(index))
+    console.log(lyrics[index].text)
   }
   //组建内的事件处理
   const handlePlayBtnClick = () => {
-    !isPlaying
-      ? audioRef.current?.play().catch(() => setIsPlaying(false))
+    isPlaying === 'pause'
+      ? audioRef.current?.play().catch(() => setIsPlaying('pause'))
       : audioRef.current?.pause()
-    setIsPlaying(!isPlaying)
+    setIsPlaying(isPlaying === 'play' ? 'pause' : 'play')
   }
+  //滑块相关
+  const handleSliderChange = (value: number) => {
+    setSliding(true)
+    setProgress(value)
+    setCurrentTime((value * duration) / 100)
+  }
+  const handleSliderCompleteChange = (value: number) => {
+    setSliding(false)
 
+    setProgress(value)
+    audioRef.current!.currentTime = (value * duration) / 100 / 1000
+    setCurrentTime((value * duration) / 100)
+  }
   const handlePlayModeClick = () => {}
+  const handleChangeBtnClick = (flag?: boolean) => {
+    console.log(flag)
+  }
   return (
     <PlayerBarWrapper className="sprite_playbar">
       <div className="content wrap-v2">
-        <BarControl isPlaying={isPlaying}>
+        <BarControl is-playing={isPlaying}>
           <button
             className="btn sprite_playbar prev"
             onClick={() => handleChangeBtnClick(false)}
@@ -86,12 +128,18 @@ const PlayerBar: FC<IProps> = () => {
           <div className="info">
             <div className="song">
               <span className="song-name">{currentSong?.name}</span>
-              <span className="singer-name">{currentSong?.ar[0]?.name}</span>
+              <span className="singer-name">{currentSong?.ar?.[0]?.name}</span>
             </div>
             <div className="progress">
-              <Slider value={progress} step={0.1} tooltip={{ formatter: null }} />
+              <Slider
+                value={progress}
+                step={0.1}
+                tooltip={{ formatter: null }}
+                onChange={handleSliderChange}
+                onChangeComplete={handleSliderCompleteChange}
+              />
               <div className="time">
-                <span className="current">{formatTime(audioRef.current?.currentTime || 0)}</span>
+                <span className="current">{formatTime(currentTime)}</span>
                 <span className="divider">/</span>
                 <span className="duration">{formatTime(duration)}</span>
               </div>
@@ -111,7 +159,8 @@ const PlayerBar: FC<IProps> = () => {
           </div>
         </BarOperator>
       </div>
-      <audio ref={audioRef} onTimeUpdate={handleTimeUpdate} />
+
+      <audio onTimeUpdate={handleTimeUpdate} ref={audioRef} />
     </PlayerBarWrapper>
   )
 }
