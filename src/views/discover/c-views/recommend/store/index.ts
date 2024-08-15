@@ -36,7 +36,8 @@ export const fetchRankingDataAction = createAsyncThunk('ranking', (arg, { dispat
     promises.push(getPlayListDetail(id))
   }
   Promise.all(promises).then((res) => {
-    const rankings = res.map((item) => item.playlist)
+    const rankings = res.filter((x) => x.playlist).map((item) => item.playlist)
+
     dispatch(changeRankingsAction(rankings))
   })
 })

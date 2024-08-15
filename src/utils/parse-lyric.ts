@@ -9,7 +9,6 @@ export function parseLyric(lyricString: string) {
   for (const line of lines) {
     // 1 匹配结果
     const result = timeRegExp.exec(line)
-    console.log(result)
     if (!result) continue
     // 2 获取时间
     const time1 = Number(result[1]) * 60 * 1000
@@ -18,7 +17,6 @@ export function parseLyric(lyricString: string) {
     const time = time1 + time2 + time3
     //3 获取文本
     const text = line.replace(timeRegExp, '')
-    console.log(text)
 
     lyrics.push({ time, text })
   }

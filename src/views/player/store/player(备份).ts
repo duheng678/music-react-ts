@@ -4,40 +4,12 @@ import { IRootState } from '@/store'
 import { ILyric, parseLyric } from '@/utils/parse-lyric'
 export const fetchCurrentSongAction = createAsyncThunk<void, number, { state: IRootState }>(
   'currentSong',
-  (id: number, { dispatch, getState }) => {
-    /**
-     *     准备播放歌曲 分为两种情况
-     *     1 从列表尝试是否可以获取这首歌
-     */
-
-    const playSongList = getState().player.playSongList
-    const findIndex = playSongList.findIndex((item) => item.id === id)
-    console.log(findIndex)
-
-    if (findIndex === -1) {
-      /**
-       *       没找到歌曲  请求歌曲
-       */
-      getSongDetail(id).then((res) => {
-        if (!res?.songs?.length) return
-        // 1获取歌曲
-        const song = res.songs?.[0]
-        dispatch(changeCurrentSongAction(song))
-        // 2 将歌曲放入列表
-        const newPlaySongList = [...playSongList]
-        newPlaySongList.push(song)
-        dispatch(changePlaySongListAction(newPlaySongList))
-
-        dispatch(changePlaySongIndexAction(newPlaySongList.length - 1))
-      })
-    } else {
-      /**
-       *      找到歌曲
-       */
-      dispatch(changeCurrentSongAction(playSongList[findIndex]))
-      dispatch(changePlaySongIndexAction(findIndex))
-    }
+  (id: number, { dispatch }) => {
     // dispatch(changeCurrentSongAction(initialState.currentSong))
+    getSongDetail(id).then((res) => {
+      if (!res?.songs?.length) return
+      dispatch(changeCurrentSongAction(res?.songs?.[0]))
+    })
 
     //获取歌词
     getSongLyric(id).then((res) => {
@@ -50,47 +22,12 @@ export const fetchCurrentSongAction = createAsyncThunk<void, number, { state: IR
     })
   }
 )
-
-export const changeMusicAction = createAsyncThunk<void, boolean, { state: IRootState }>(
-  'changeMusic',
-  (isNext, { dispatch, getState }) => {
-    //1 获取state中的数据
-    const { playMode, playSongList, playSongIndex } = getState().player
-    // 2 根据不同的模式计算不同的下一首歌曲索引
-    let newIndex = playSongIndex
-    if (playMode === 1) {
-      //随机播放
-      newIndex = Math.floor(Math.random() * playSongList.length)
-    } else {
-      newIndex = isNext ? playSongIndex + 1 : playSongIndex - 1
-      if (newIndex >= playSongList.length) newIndex = 0
-      if (newIndex < 0) newIndex = playSongList.length - 1
-    }
-    // 3 获取当前的歌曲
-    // dispatch(fetchCurrentSongAction(playSongList[newIndex].id))
-    const song = playSongList[newIndex]
-    dispatch(changeCurrentSongAction(song))
-    dispatch(changePlaySongIndexAction(newIndex))
-    //4 切换歌词
-    //获取歌词
-    getSongLyric(song?.id).then((res) => {
-      // 1获取歌词
-      const lyricString = res?.lrc?.lyric
-      // 2 解析歌词
-      const lyrics = parseLyric(lyricString)
-      console.log(lyrics)
-      dispatch(changeLyricAction(lyrics))
-    })
-  }
-)
-
 interface IPlayerState {
   currentSong: any
   lyrics: ILyric[]
   lyricIndex: number
   playSongList: any[]
   playSongIndex: number
-  playMode: number
 }
 const initialState: IPlayerState = {
   currentSong: {
@@ -269,8 +206,7 @@ const initialState: IPlayerState = {
       publishTime: 1049126400000
     }
   ],
-  playSongIndex: -1,
-  playMode: 0 //0 顺序播放 1 随机播放 2 单曲循环
+  playSongIndex: -1
 }
 const playerSlice = createSlice({
   name: 'player',
@@ -284,26 +220,11 @@ const playerSlice = createSlice({
     },
     changeLyricIndexAction(state, { payload }) {
       state.lyricIndex = payload
-    },
-    changePlaySongIndexAction(state, { payload }) {
-      state.playSongIndex = payload
-    },
-    changePlaySongListAction(state, { payload }) {
-      state.playSongList = payload
-    },
-    changePlayModeAction(state, { payload }) {
-      state.playMode = payload
     }
   }
 })
 
 export default playerSlice.reducer
-export const {
-  changeCurrentSongAction,
-  changeLyricAction,
-  changeLyricIndexAction,
-  changePlaySongIndexAction,
-  changePlaySongListAction,
-  changePlayModeAction
-} = playerSlice.actions
+export const { changeCurrentSongAction, changeLyricAction, changeLyricIndexAction } =
+  playerSlice.actions
 // export const {} = playerSlice.actions

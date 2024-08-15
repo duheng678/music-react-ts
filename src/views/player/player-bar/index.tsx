@@ -2,12 +2,12 @@ import React, { memo, useEffect, useRef, useState } from 'react'
 import type { FC, ReactNode } from 'react'
 import { BarControl, BarOperator, BarPlayInfo, PlayerBarWrapper } from './style'
 import { NavLink } from 'react-router-dom'
-import { Slider } from 'antd'
+import { Slider, message } from 'antd'
 // import { useSelector } from 'react-redux'
 import { shallowEqualApp, useAppDispatch, useAppSelector } from '@/store'
 import { getSongUrl } from '../service'
 import { formatTime } from '@/utils/handle-player'
-import { changeLyricIndexAction } from '../store/player'
+import { changeLyricIndexAction, changeMusicAction, changePlayModeAction } from '../store/player'
 interface IProps {
   children?: ReactNode
 }
@@ -16,11 +16,12 @@ const PlayerBar: FC<IProps> = () => {
   const audioRef = useRef<HTMLAudioElement>(null)
   const dispatch = useAppDispatch()
 
-  const { currentSong, lyrics, lyricIndex } = useAppSelector(
+  const { currentSong, lyrics, lyricIndex, playMode } = useAppSelector(
     (state) => ({
       currentSong: state.player.currentSong,
       lyrics: state.player.lyrics,
-      lyricIndex: state.player.lyricIndex
+      lyricIndex: state.player.lyricIndex,
+      playMode: state.player.playMode
     }),
     shallowEqualApp
   )
@@ -36,17 +37,18 @@ const PlayerBar: FC<IProps> = () => {
 
         setDuration(time)
         audioRef.current!.src = url
+        audioRef.current?.play().then(
+          (res) => {
+            console.log(res)
+          },
+          (error) => {
+            console.log(error)
+          }
+        )
       }
     })
-    audioRef.current?.play().then(
-      (res) => {
-        console.log(res)
-      },
-      (error) => {
-        console.log(error)
-      }
-    )
-    setDuration(currentSong?.dt)
+
+    // setDuration(currentSong?.dt)
   }, [currentSong])
 
   const [isPlaying, setIsPlaying] = useState('pause') //暂停开始
@@ -79,9 +81,12 @@ const PlayerBar: FC<IProps> = () => {
         break
       }
     }
+    //4 匹配对应的歌词的index
     if (lyricIndex === index || index === -1) return
     dispatch(changeLyricIndexAction(index))
     console.log(lyrics[index].text)
+    // 5展示歌词
+    message.open({ content: lyrics[index].text, duration: 0, key: 'lyric' })
   }
   //组建内的事件处理
   const handlePlayBtnClick = () => {
@@ -103,9 +108,23 @@ const PlayerBar: FC<IProps> = () => {
     audioRef.current!.currentTime = (value * duration) / 100 / 1000
     setCurrentTime((value * duration) / 100)
   }
-  const handlePlayModeClick = () => {}
-  const handleChangeBtnClick = (flag?: boolean) => {
-    console.log(flag)
+  const handlePlayModeClick = () => {
+    // dispatch()
+    let newPlayMode = playMode + 1
+    if (newPlayMode > 2) newPlayMode = 0
+    dispatch(changePlayModeAction(newPlayMode))
+  }
+  const handleChangeBtnClick = (isNext = true) => {
+    dispatch(changeMusicAction(isNext))
+  }
+  // 时间结束
+  const handleTimeEnded = () => {
+    if (playMode === 2) {
+      audioRef.current!.currentTime = 0
+      audioRef.current?.play()
+    } else {
+      dispatch(changeMusicAction(true))
+    }
   }
   return (
     <PlayerBarWrapper className="sprite_playbar">
@@ -146,7 +165,7 @@ const PlayerBar: FC<IProps> = () => {
             </div>
           </div>
         </BarPlayInfo>
-        <BarOperator playmode={1}>
+        <BarOperator playmode={playMode}>
           <div className="left">
             <button className="btn pip"></button>
             <button className="btn sprite_playbar favor"></button>
@@ -160,7 +179,7 @@ const PlayerBar: FC<IProps> = () => {
         </BarOperator>
       </div>
 
-      <audio onTimeUpdate={handleTimeUpdate} ref={audioRef} />
+      <audio onTimeUpdate={handleTimeUpdate} ref={audioRef} onEnded={handleTimeEnded} />
     </PlayerBarWrapper>
   )
 }
